@@ -14,6 +14,7 @@ if GPIO.getmode() == GPIO.BCM:
 else:
     print('Setting pin layout mode')
     GPIO.setmode(GPIO.BCM)
+
 #configure channels for blind control
 UP_GPIO_PIN = 2
 STOP_GPIO_PIN = 3
@@ -31,6 +32,7 @@ def timedBlindMotion(pin, duration): #press directional button, then wait and pr
     time.sleep(duration)
     pressButton(STOP_GPIO_PIN)
 
+#define API routes
 @app.route("/hello")
 def hello():
     return "Hello World!"
@@ -43,10 +45,3 @@ def down():
 @app.route("/stop")
 def stop():
     return "Blinds stopped!"
-
-#
-#
-#
-# GPIO.setup(2,GPIO.OUT)
-# GPIO.output(2,GPIO.HIGH)
-# GPIO.output(2,GPIO.LOW)
