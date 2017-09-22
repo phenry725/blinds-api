@@ -8,11 +8,12 @@ try:
 except RuntimeError:
     print("Error importing RPi.GPIO!  This is probably because you need superuser privileges.  You can achieve this by using 'sudo' to run your script")
 
+UP_GPIO_PIN = 2
+STOP_GPIO_PIN = 3
+DOWN_GPIO_PIN = 4
+
 #configure channels for blind control
 def initPins():
-    UP_GPIO_PIN = 2
-    STOP_GPIO_PIN = 3
-    DOWN_GPIO_PIN = 4
     chan_list = [UP_GPIO_PIN,STOP_GPIO_PIN,DOWN_GPIO_PIN]
     GPIO.setup(chan_list,GPIO.OUT)
 
@@ -37,15 +38,8 @@ def timedBlindMotion(pin, duration): #press directional button, then wait and pr
 
 resetPins()
 #define API routes
-@app.route("/hello")
-def hello():
-    return "Hello World!"
-@app.route("/up", methods=['POST'])
-def up():
-    return "Blinds up!"
-@app.route("/down")
-def down():
-    return "Blinds down!"
-@app.route("/stop")
-def stop():
-    return "Blinds stopped!"
+@app.route("/blinds", methods=['POST'])
+def blindControl():
+
+    # client_id = request.args.get('client_id', '')
+    # client_secret = request.args.get('client_secret', '')
