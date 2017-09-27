@@ -10,24 +10,23 @@ except RuntimeError:
 
 from time import sleep
 
-UP_GPIO_PIN = 3
-STOP_GPIO_PIN = 5
-DOWN_GPIO_PIN = 7
+UP_GPIO_PIN = 37
+STOP_GPIO_PIN = 35
+DOWN_GPIO_PIN = 33
 
 #configure channels for blind control
-#def initPins():
-    #turns out when you initialize the
-    #GPIO pin (high or low) it "presses" the button
+def initPins():
+    if GPIO.getmode() != GPIO.BOARD:   #set the board mode at time of press if not set
+        GPIO.setmode(GPIO.BOARD)
 
 #cleanup pins
 def resetPins():
     GPIO.cleanup()
 
-
 #define button presses
 def pressButton(pin):
-    if GPIO.getmode() != GPIO.BOARD:   #set the board mode at time of press if not set
-        GPIO.setmode(GPIO.BOARD)
+    if GPIO.getmode() !=  GPIO.BOARD:
+        initPins()
     GPIO.setup(pin, GPIO.OUT, initial=0)  #power the pin then remove the power
     sleep(0.5)
     GPIO.cleanup(pin)
