@@ -38,8 +38,13 @@ def timedBlindMotion(pin, duration): #press directional button, then wait and pr
 #define API routes
 @app.route("/blinds", methods=['POST'])
 def blindControl():
+    print request
     content = request.get_json()
     print "Incoming request: " + str(content)
+    if content is None:
+        return json.jsonify(
+            ok=False
+        )
     try:
         pin = pinsDict[content['command']]
         if 'duration' in content:
