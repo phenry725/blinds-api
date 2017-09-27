@@ -8,6 +8,11 @@ UP_GPIO_PIN = 37
 STOP_GPIO_PIN = 35
 DOWN_GPIO_PIN = 33
 
+pinsDict = {}
+pinsDict['up'] = UP_GPIO_PIN
+pinsDict['down'] = DOWN_GPIO_PIN
+pinsDict['stop'] = STOP_GPIO_PIN
+
 #configure channels for blind control
 def initPins():
     if GPIO.getmode() != GPIO.BOARD:   #set the board mode at time of press if not set
@@ -35,14 +40,14 @@ def timedBlindMotion(pin, duration): #press directional button, then wait and pr
 def blindControl():
     content = request.get_json()
     print "Incoming request: " + str(content)
-    if content['command'] == "up":
-        pressButton(UP_GPIO_PIN)
-    elif content['command'] == "down":
-        pressButton(DOWN_GPIO_PIN)
-    elif content['command'] == "stop":
-        pressButton(STOP_GPIO_PIN)
-    else:
-        print "Error invalid command in " + str(content['command'])
+    try:
+        pin = pinsDict[content['command']]
+        if content['duration'] is not None:
+            timedBlindMotion(pin, content['duration'])
+        else:
+            pressButton(pin)
+    except KeyError:
+        print "Error invalid command: " + str(content['command'])
         return json.jsonify(
             ok=False
         )
