@@ -42,7 +42,7 @@ def blindControl():
     print "Incoming request: " + str(content)
     try:
         pin = pinsDict[content['command']]
-        if content['duration'] is not None:
+        if 'duration' in content:
             timedBlindMotion(pin, content['duration'])
         else:
             pressButton(pin)
