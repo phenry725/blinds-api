@@ -1,14 +1,8 @@
 #load API frameworks
-# from flask import Flask
-# app = Flask(__name__)
-
-#load GPIO framework and set correct pin layout
-try:
-    import RPi.GPIO as GPIO
-except RuntimeError:
-    print("Error importing RPi.GPIO!  This is probably because you need superuser privileges.  You can achieve this by using 'sudo' to run your script")
-
 from time import sleep
+import RPi.GPIO as GPIO
+from flask import Flask, request, json
+app = Flask(__name__)
 
 UP_GPIO_PIN = 37
 STOP_GPIO_PIN = 35
@@ -33,11 +27,25 @@ def pressButton(pin):
 
 def timedBlindMotion(pin, duration): #press directional button, then wait and press stop
     pressButton(pin)
-    time.sleep(duration)
+    sleep(duration)
     pressButton(STOP_GPIO_PIN)
 
 #define API routes
-# @app.route("/blinds", methods=['POST'])
-# def blindControl():
-    # client_id = request.args.get('client_id', '')
-    # client_secret = request.args.get('client_secret', '')
+@app.route("/blinds", methods=['POST'])
+def blindControl():
+    content = request.get_json()
+    print "Incoming request: " + str(content)
+    if content['command'] == "up":
+        pressButton(UP_GPIO_PIN)
+    elif content['command'] == "down":
+        pressButton(DOWN_GPIO_PIN)
+    elif content['command'] == "stop":
+        pressButton(STOP_GPIO_PIN)
+    else:
+        print "Error invalid command in " + str(content['command'])
+        return json.jsonify(
+            ok=False
+        )
+    return json.jsonify(
+        ok=True
+    )
