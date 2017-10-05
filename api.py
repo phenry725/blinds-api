@@ -35,6 +35,16 @@ def timedBlindMotion(pin, duration): #press directional button, then wait and pr
     sleep(duration)
     pressButton(STOP_GPIO_PIN)
 
+def returnErrorStatus():
+    return json.jsonify(
+        ok=False
+    )
+
+def returnSuccessStatus():
+    return json.jsonify(
+        ok=True
+    )
+
 #define API routes
 @app.route("/blinds", methods=['POST'])
 def blindControl():
@@ -42,9 +52,7 @@ def blindControl():
     content = request.get_json()
     print "Incoming request: " + str(content)
     if content is None:
-        return json.jsonify(
-            ok=False
-        )
+        return returnErrorStatus()
     try:
         pin = pinsDict[content['command']]
         if 'duration' in content:
@@ -53,9 +61,5 @@ def blindControl():
             pressButton(pin)
     except KeyError:
         print "Error invalid command: " + str(content['command'])
-        return json.jsonify(
-            ok=False
-        )
-    return json.jsonify(
-        ok=True
-    )
+        return returnErrorStatus()
+    return returnSuccessStatus()
