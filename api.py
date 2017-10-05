@@ -48,18 +48,23 @@ def returnSuccessStatus():
 #define API routes
 @app.route("/blinds", methods=['POST'])
 def blindControl():
-    print request
     content = request.get_json()
-    print "Incoming request: " + str(content)
     if content is None:
         return returnErrorStatus()
+    print "Incoming request: " + str(content)
     try:
         pin = pinsDict[content['command']]
         if 'duration' in content:
-            timedBlindMotion(pin, content['duration'])
+            timedBlindMotion(pin, content['duration']) #what if duration is not int, explain difference between press/timed
+            #schedule stop
         else:
             pressButton(pin)
     except KeyError:
         print "Error invalid command: " + str(content['command'])
         return returnErrorStatus()
     return returnSuccessStatus()
+
+# @app.route("/lights", methods=['POST'])
+# def lightControl():
+#     content = request.get_json()
+#
