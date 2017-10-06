@@ -30,8 +30,7 @@ def pressButton(pin):
     sleep(0.5)
     GPIO.cleanup(pin)
 
-def timedBlindMotion(pin, duration): #press directional button, then wait and press stop
-    pressButton(pin)
+def stopBlindsAfterDelay(duration): #press directional button, then wait and press stop
     sleep(duration)
     pressButton(STOP_GPIO_PIN)
 
@@ -52,16 +51,16 @@ def blindControl():
     if content is None:
         return returnErrorStatus()
     print "Incoming request: " + str(content)
-    try:
+    #Try to set the pin for the command, if not return error
+    try
         pin = pinsDict[content['command']]
-        if 'duration' in content:
-            timedBlindMotion(pin, content['duration']) #what if duration is not int, explain difference between press/timed
-            #schedule stop
-        else:
-            pressButton(pin)
     except KeyError:
-        print "Error invalid command: " + str(content['command'])
+        print "Error invalid or missing command: " + str(content['command'])
         return returnErrorStatus()
+    #execute pin press
+    pressButton(pin)
+    if 'duration' in content:
+        stopBlindsAfterDelay(content['duration']) #what if duration is not int, explain difference between press/timed
     return returnSuccessStatus()
 
 # @app.route("/lights", methods=['POST'])
