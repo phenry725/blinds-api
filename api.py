@@ -43,13 +43,6 @@ def stopBlindsAfterDelay(duration):
 #############
 ##API UTILS##
 #############
-
-def filterEmptyPayload(httpRequest):
-    content = httpRequest.get_json()
-    if content is None:
-        return returnErrorStatus()
-    return content
-
 def returnErrorStatus():
     return json.jsonify(
         ok=False
@@ -60,9 +53,18 @@ def returnSuccessStatus():
         ok=True
     )
 
+def filterEmptyPayload(httpRequest):
+    content = httpRequest.get_json()
+    if content is None:
+        return returnErrorStatus()
+    return content
+
+#############
+##API ROUTES#
+#############
 #define API routes
 @app.route("/blinds", methods=['POST'])
-#TODO:what if duration is not int, explain difference between press/timed
+#TODO:what if duration is not int
 def blindControl():
     content = filterEmptyPayload(request)
     print "Incoming request: " + str(content)
