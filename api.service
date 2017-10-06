@@ -1,0 +1,13 @@
+[Unit]
+Description=Home Automation API
+After=network.target
+
+[Service]
+Environment=FLASK_APP=/var/local/api.py
+ExecStart=/usr/local/bin/flask run --host=0.0.0.0
+Type=idle
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+Alias=api.service
