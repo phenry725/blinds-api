@@ -62,7 +62,7 @@ def filterEmptyPayload(httpRequest):
 def blindControl():
     content = filterEmptyPayload(request)
     print "Incoming request: " + str(content)
-    try                                             #Try to set the pin for the command, if not return error
+    try:                                             #Try to set the pin for the command, if not return error
         pin = pinsDict[content['command']]
     except KeyError:
         print "Error invalid or missing command: " + str(content['command'])
