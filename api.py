@@ -43,20 +43,14 @@ def stopBlindsAfterDelay(duration):
 #############
 ##API UTILS##
 #############
-def returnErrorStatus():
-    return json.jsonify(
-        ok=False
-    )
+errorStatus = json.jsonify(ok=False)
 
-def returnSuccessStatus():
-    return json.jsonify(
-        ok=True
-    )
+successStatus = json.jsonify(ok=True)
 
 def filterEmptyPayload(httpRequest):
     content = httpRequest.get_json()
     if content is None:
-        return returnErrorStatus()
+        return successStatus
     return content
 
 #############
@@ -72,11 +66,11 @@ def blindControl():
         pin = pinsDict[content['command']]
     except KeyError:
         print "Error invalid or missing command: " + str(content['command'])
-        return returnErrorStatus()
+        return errorStatus
     pressButton(pin)
     if 'duration' in content:
         stopBlindsAfterDelay(content['duration'])
-    return returnSuccessStatus()
+    return successStatus
 
 # @app.route("/lights", methods=['POST'])
 # def lightControl():
